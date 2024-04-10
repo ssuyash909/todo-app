@@ -1,6 +1,6 @@
 import  { useState, useEffect } from "react";
 
-import axios from "axios";
+import jokeService from "@/service/jokes";
 
 import type { Joke } from "@/types/joke";
 
@@ -9,11 +9,12 @@ export const useJokes  = () =>{
     const [isLoading,setIsLoading] = useState<boolean>(false);
 
     useEffect(() =>{
+        if(joke === null){
         (async() =>{
             setIsLoading(true);
             try{
-            const {data} = await axios.get<Joke []>('https://official-joke-api.appspot.com/jokes/programming/random');
-            setJoke(data[0]);
+            const joke = await jokeService.getJoke();
+            setJoke(joke);
             }catch(err){
                 console.log(err);
             }
@@ -21,6 +22,7 @@ export const useJokes  = () =>{
                 setIsLoading(false);
             }
         })()
+        }
     },[])
     // useEffect(() =>{
     //     setIsLoading(true);    
